@@ -18,6 +18,7 @@ function PDFImage(pdfFilePath, options) {
   this.useGM = options.graphicsMagick || false;
 
   this.outputDirectory = options.outputDirectory || path.dirname(pdfFilePath);
+  this.nonZeroBased = options.nonZeroBased || false;
 }
 
 PDFImage.prototype = {
@@ -60,9 +61,12 @@ PDFImage.prototype = {
     });
   },
   getOutputImagePathForPage: function (pageNumber) {
+    var fileName = this.pdfFileBaseName
+          + "-" + ((this.nonZeroBased) ? (~~pageNumber+1) : pageNumber)
+          + "." + this.convertExtension;
     return path.join(
       this.outputDirectory,
-      this.pdfFileBaseName + "-" + pageNumber + "." + this.convertExtension
+      fileName
     );
   },
   setConvertOptions: function (convertOptions) {

@@ -26,6 +26,14 @@ describe("PDFImage", function () {
       .equal("/tmp/test-1000.png");
   });
 
+  it("should return non-zero based page path", function () {
+    pdfImage = new PDFImage(pdfPath, { nonZeroBased: true });
+    expect(pdfImage.getOutputImagePathForPage(0))
+      .equal("/tmp/test-1.png");
+    expect(pdfImage.getOutputImagePathForPage(2))
+      .equal("/tmp/test-3.png");
+  });
+
   it("should return correct convert command", function () {
     expect(pdfImage.constructConvertCommandForPage(1))
       .equal("convert '/tmp/test.pdf[1]' '/tmp/test-1.png'");
