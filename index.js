@@ -149,6 +149,28 @@ PDFImage.prototype = {
       });
     });
     return promise;
+  },
+  convertAllPages: function () {
+    var self = this;
+    var promise = new Promise(function (resolve, reject) {
+      var paths = [];
+      self.numberOfPages().then(function(numberOfPages) {
+        var numberOfPages = ~~numberOfPages - 1;
+        var numberOfPagesDone = 0;
+        var convertPage = function convertPage(pageNumber) {
+          self.convertPage(pageNumber).then(function(path) {
+            numberOfPagesDone++;
+            paths.push(path);
+            if (numberOfPagesDone == numberOfPages+1) return resolve(paths);
+            return;
+          });
+        };
+        for (var i=0; i<=numberOfPages; i++) {
+          convertPage(i);
+        }
+      });
+    });
+    return promise;
   }
 };
 
